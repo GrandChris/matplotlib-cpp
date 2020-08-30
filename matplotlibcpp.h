@@ -313,9 +313,9 @@ template <> struct select_npy_type<uint64_t> { const static NPY_TYPES type = NPY
 // Sanity checks; comment them out or change the numpy type below if you're compiling on
 // a platform where they don't apply
 static_assert(sizeof(long long) == 8);
-template <> struct select_npy_type<long long> { const static NPY_TYPES type = NPY_INT64; };
+//template <> struct select_npy_type<long long> { const static NPY_TYPES type = NPY_INT64; };
 static_assert(sizeof(unsigned long long) == 8);
-template <> struct select_npy_type<unsigned long long> { const static NPY_TYPES type = NPY_UINT64; };
+//template <> struct select_npy_type<unsigned long long> { const static NPY_TYPES type = NPY_UINT64; };
 // TODO: add int, long, etc.
 
 template<typename Numeric>
@@ -868,7 +868,7 @@ bool scatter(const std::vector<NumericX>& x,
     PyObject* yarray = detail::get_array(y);
 
     PyObject* kwargs = PyDict_New();
-    PyDict_SetItemString(kwargs, "s", PyLong_FromLong(s));
+    PyDict_SetItemString(kwargs, "s", PyLong_FromLong(static_cast<long>(s)));
     for (const auto& it : keywords)
     {
         PyDict_SetItemString(kwargs, it.first.c_str(), PyString_FromString(it.second.c_str()));
@@ -1424,7 +1424,7 @@ template<typename Numeric>
 bool plot(const std::vector<Numeric>& y, const std::string& format = "")
 {
     std::vector<Numeric> x(y.size());
-    for(size_t i=0; i<x.size(); ++i) x.at(i) = i;
+    for(size_t i=0; i<x.size(); ++i) x.at(i) = static_cast<Numeric>(i);
     return plot(x,y,format);
 }
 
